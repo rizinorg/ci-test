@@ -1,8 +1,18 @@
+platform: darwin/arm64
+
+environment:
+  - MYCOOLENV=ulumulu
+
 pipeline:
   build:
-    image: alpine:latest
+    image: /bin/bash
     commands:
-      - apk add meson build-base
-      - meson build
-      - samu -C build
-      - build/ci-test
+      - export MYENV=hello
+      - 'echo "The env is: $${MYENV}"'
+      - 'echo "The cool env is: $${MYCOOLENV}"'
+  more:
+    image: /bin/bash
+    commands:
+      - echo more begin
+      - 'echo "The env is now: $${MYENV}"'
+      - 'echo "The cool env is: $${MYCOOLENV}"'
