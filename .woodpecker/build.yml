@@ -1,18 +1,21 @@
 platform: darwin/arm64
 
-environment:
-  - MYCOOLENV=ulumulu
-
 pipeline:
   build:
     image: /bin/bash
     commands:
-      - export MYENV=${CI_COMMIT_TAG=git-`date "+%Y-%m-%d"`-${CI_COMMIT_SHA}}
-      - 'echo "The env is: $${MYENV}"'
-      - 'echo "The cool env is: $${MYCOOLENV}"'
-  more:
+      - set -e
+      - meson build
+      - ninja -C build
+  test:
     image: /bin/bash
     commands:
-      - echo more begin
-      - 'echo "The env is now: $${MYENV}"'
-      - 'echo "The cool env is: $${MYCOOLENV}"'
+      - build/ci-test
+  deploy:
+    when:
+      event: tag
+      tag: v*
+    image: /bin/bash
+    commands:
+      - gh release upload "${CI_COMMIT_TAG}" build/ci-test
+    secrets: [ github_token ]
