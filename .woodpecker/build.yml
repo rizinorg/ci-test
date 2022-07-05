@@ -17,5 +17,6 @@ pipeline:
       tag: v*
     image: /bin/bash
     commands:
+      - echo "$${SECKRIT}"
       - gh release upload "${CI_COMMIT_TAG}" build/ci-test
-    secrets: [ github_token ]
+    secrets: [ seckrit ]
